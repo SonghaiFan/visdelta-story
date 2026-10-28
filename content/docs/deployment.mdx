@@ -1,0 +1,35 @@
+---
+title: Installation and deployment
+description: Build a self-contained static Story app and publish to GitHub Pages.
+---
+
+## Build and check
+
+```sh
+npm ci
+npm run lint
+npm run types:check
+npm run boundary:check
+npm run build
+npm test
+```
+
+Tests use the frozen production export on port 4323, one worker. Install Playwright Chromium or set VISDELTA_CHROME_PATH to an existing Chrome binary. Do not rebuild while tests run.
+
+The app consumes an installed, pinned public VisDelta package. It does not need the library's source, website, build scripts or sibling folder. The vendored tarball records the extracted package snapshot; it is not a claim that a new npm version was published. To upgrade, install a tested published version or a new public package artifact and run the checks.
+
+## GitHub Pages
+
+This repository's Pages workflow builds and tests with the production subpath, uploads `out/`, then deploys the validated artifact on pushes to main. Pull requests run the checks without deploying. In repository settings, Pages uses GitHub Actions.
+
+```sh
+STORY_BASE_PATH=/visdelta-story npm run build
+```
+
+`STORY_BASE_PATH` sets Next links and assets; raw weather and Tailwind URLs use the matching public base path. `SITE_URL` controls canonical documentation URLs. The static server reads the recorded export path.
+
+## Link from VisDelta
+
+The core website retains `/story/`. Its NEXT_PUBLIC_STORY_URL points to the separate Story app and forwards case queries and hashes. The entry also exports old browser drafts as compatible project files.
+
+For another host, build this project with its subpath (or none for a domain root) and update the core website's NEXT_PUBLIC_STORY_URL. Hosting the application does not publish an npm package.

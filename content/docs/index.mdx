@@ -1,0 +1,24 @@
+---
+title: VisDelta Story
+description: Write interactive data stories with MDX and native VisDelta charts.
+---
+
+VisDelta Story is an independent application built on [VisDelta](https://songhaifan.github.io/visdelta/). It supplies the MDX editor, scrolling layouts, reactive prose, controls and project files. VisDelta supplies chart declarations, rendering and transitions.
+
+## Start writing
+
+[Open Story Studio](/story/), choose **Sales**, and edit the prose in `story.mdx`. [Quick start](./quick-start.mdx) walks through a complete example.
+
+The editor has three files: `story.mdx` for prose and components, `chart.js` for native charts or a model, and `data.json` for editable records. Small stories can keep chart declarations inside MDX.
+
+## Choose an example
+
+- [Sales](/story/?example=sales): overview → highlight → overview.
+- [Energy](/story/?example=energy): a slider binds filtered charts and quoted counts.
+- [Weather](/story/?example=weather): a real historical archive, date/measure selection and percentile exploration.
+
+## Application and library boundaries
+
+`Scrolly`, `Step`, `StoryData` and the binding controls belong to **VisDelta Story**. They are not exports from the `visdelta` package. Native expressions such as `bar(rows).x('region').y('revenue')` belong to VisDelta. [Chart authoring](./charts.mdx) explains how these fit together.
+
+This documentation is maintained and deployed with Story. It uses the same Fumadocs layout, sidebar, static search, page contents and Markdown exports as the VisDelta documentation.

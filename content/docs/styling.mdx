@@ -1,0 +1,42 @@
+---
+title: HTML, Tailwind and layouts
+description: Customize MDX directly and keep controls available while scrolling.
+---
+
+## Use HTML and utility classes
+
+```mdx
+<div className="rounded-xl border bg-fd-background p-[18px] md:p-6">
+
+## A custom section
+
+Ordinary Markdown, JSX and Tailwind can be composed together.
+
+</div>
+```
+
+Use `className` rather than HTML `class`, and React objects for inline styles. The browser preview locally compiles rendered classes, including arbitrary values, responsive variants, hover states, dark mode and classes changed by custom React components. No CDN script or second Preflight reset is injected. Utilities and theme variables are scoped to the reading pane.
+
+`md:` follows the browser viewport. Story's chart layouts also adapt to the reading pane width using container queries.
+
+## Keep controls above the chart
+
+```mdx
+<Sticky>
+<details>
+<summary>Explore another day or measure</summary>
+<Controls>
+<DatePicker bind="date" label="Date" required />
+<Select bind="metric" label="Measure" options={['tmax', 'tmin']} />
+</Controls>
+</details>
+</Sticky>
+```
+
+Place this inside the Story scope declaring `date` and `metric`. Sticky measures its actual height so the chart leaves room beneath it. It limits its height and allows internal scrolling on small screens.
+
+A plain `<div className="sticky top-0 z-20">` also works, but it does not reserve chart space automatically.
+
+## Component styling
+
+Story, Hero, Chapter, Scrolly, Step, Controls, Value and Sticky accept `className` and `style`. Native wrappers with descendant variants can customize inputs. Imported arbitrary stylesheets, Tailwind plugins and custom configuration files are not supported by the editor. Exported MDX needs a host that supplies Tailwind or equivalent styles.

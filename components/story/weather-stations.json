@@ -1,0 +1,317 @@
+[
+  {
+    "id": "094029",
+    "name": "Hobart",
+    "latitude": -42.89,
+    "longitude": 147.33,
+    "state": "TAS"
+  },
+  {
+    "id": "086338",
+    "name": "Melbourne",
+    "latitude": -37.83,
+    "longitude": 144.98,
+    "state": "VIC"
+  },
+  {
+    "id": "089002",
+    "name": "Ballarat",
+    "latitude": -37.51,
+    "longitude": 143.79,
+    "state": "VIC"
+  },
+  {
+    "id": "081049",
+    "name": "Shepparton",
+    "latitude": -36.44,
+    "longitude": 145.27,
+    "state": "VIC"
+  },
+  {
+    "id": "076031",
+    "name": "Mildura",
+    "latitude": -34.24,
+    "longitude": 142.09,
+    "state": "VIC"
+  },
+  {
+    "id": "085072",
+    "name": "Sale",
+    "latitude": -38.12,
+    "longitude": 147.13,
+    "state": "VIC"
+  },
+  {
+    "id": "072023",
+    "name": "Albury",
+    "latitude": -36.1,
+    "longitude": 147.03,
+    "state": "VIC"
+  },
+  {
+    "id": "090015",
+    "name": "Cape Otway",
+    "latitude": -38.86,
+    "longitude": 143.51,
+    "state": "VIC"
+  },
+  {
+    "id": "066062",
+    "name": "Sydney",
+    "latitude": -33.86,
+    "longitude": 151.21,
+    "state": "NSW"
+  },
+  {
+    "id": "065070",
+    "name": "Dubbo",
+    "latitude": -32.22,
+    "longitude": 148.58,
+    "state": "NSW"
+  },
+  {
+    "id": "072150",
+    "name": "Wagga Wagga",
+    "latitude": -35.16,
+    "longitude": 147.46,
+    "state": "NSW"
+  },
+  {
+    "id": "061055",
+    "name": "Newcastle",
+    "latitude": -32.92,
+    "longitude": 151.8,
+    "state": "NSW"
+  },
+  {
+    "id": "060139",
+    "name": "Port Macquarie",
+    "latitude": -31.43,
+    "longitude": 152.87,
+    "state": "NSW"
+  },
+  {
+    "id": "059151",
+    "name": "Coffs Harbour",
+    "latitude": -30.32,
+    "longitude": 153.12,
+    "state": "NSW"
+  },
+  {
+    "id": "048245",
+    "name": "Bourke",
+    "latitude": -30.04,
+    "longitude": 146.95,
+    "state": "NSW"
+  },
+  {
+    "id": "053115",
+    "name": "Moree",
+    "latitude": -29.49,
+    "longitude": 149.85,
+    "state": "NSW"
+  },
+  {
+    "id": "056229",
+    "name": "Guyra",
+    "latitude": -30.21,
+    "longitude": 151.68,
+    "state": "NSW"
+  },
+  {
+    "id": "070351",
+    "name": "Canberra",
+    "latitude": -35.31,
+    "longitude": 149.2,
+    "state": "ACT"
+  },
+  {
+    "id": "031011",
+    "name": "Cairns",
+    "latitude": -16.87,
+    "longitude": 145.75,
+    "state": "QLD"
+  },
+  {
+    "id": "040764",
+    "name": "Gold Coast",
+    "latitude": -27.94,
+    "longitude": 153.43,
+    "state": "QLD"
+  },
+  {
+    "id": "040093",
+    "name": "Gympie",
+    "latitude": -26.18,
+    "longitude": 152.64,
+    "state": "QLD"
+  },
+  {
+    "id": "033119",
+    "name": "Mackay",
+    "latitude": -21.12,
+    "longitude": 149.22,
+    "state": "QLD"
+  },
+  {
+    "id": "039083",
+    "name": "Rockhampton",
+    "latitude": -23.38,
+    "longitude": 150.48,
+    "state": "QLD"
+  },
+  {
+    "id": "040842",
+    "name": "Brisbane",
+    "latitude": -27.39,
+    "longitude": 153.13,
+    "state": "QLD"
+  },
+  {
+    "id": "032040",
+    "name": "Townsville",
+    "latitude": -19.25,
+    "longitude": 146.77,
+    "state": "QLD"
+  },
+  {
+    "id": "036031",
+    "name": "Longreach",
+    "latitude": -23.44,
+    "longitude": 144.28,
+    "state": "QLD"
+  },
+  {
+    "id": "029127",
+    "name": "Mount Isa",
+    "latitude": -20.28,
+    "longitude": 139.49,
+    "state": "QLD"
+  },
+  {
+    "id": "043091",
+    "name": "Roma",
+    "latitude": -26.55,
+    "longitude": 148.77,
+    "state": "QLD"
+  },
+  {
+    "id": "038026",
+    "name": "Birdsville",
+    "latitude": -25.9,
+    "longitude": 139.35,
+    "state": "QLD"
+  },
+  {
+    "id": "023000",
+    "name": "Adelaide",
+    "latitude": -34.92,
+    "longitude": 138.62,
+    "state": "SA"
+  },
+  {
+    "id": "018012",
+    "name": "Ceduna",
+    "latitude": -32.13,
+    "longitude": 133.7,
+    "state": "SA"
+  },
+  {
+    "id": "017043",
+    "name": "Oodnadatta",
+    "latitude": -27.56,
+    "longitude": 135.45,
+    "state": "SA"
+  },
+  {
+    "id": "018192",
+    "name": "Port Lincoln",
+    "latitude": -34.6,
+    "longitude": 135.88,
+    "state": "SA"
+  },
+  {
+    "id": "026021",
+    "name": "Mount Gambier",
+    "latitude": -37.75,
+    "longitude": 140.77,
+    "state": "SA"
+  },
+  {
+    "id": "016001",
+    "name": "Woomera",
+    "latitude": -31.16,
+    "longitude": 136.81,
+    "state": "SA"
+  },
+  {
+    "id": "009021",
+    "name": "Perth",
+    "latitude": -31.93,
+    "longitude": 115.98,
+    "state": "WA"
+  },
+  {
+    "id": "009999",
+    "name": "Albany",
+    "latitude": -34.94,
+    "longitude": 117.82,
+    "state": "WA"
+  },
+  {
+    "id": "009789",
+    "name": "Esperance",
+    "latitude": -33.83,
+    "longitude": 121.89,
+    "state": "WA"
+  },
+  {
+    "id": "008315",
+    "name": "Geraldton",
+    "latitude": -28.8,
+    "longitude": 114.7,
+    "state": "WA"
+  },
+  {
+    "id": "004032",
+    "name": "Port Hedland",
+    "latitude": -20.37,
+    "longitude": 118.63,
+    "state": "WA"
+  },
+  {
+    "id": "003003",
+    "name": "Broome",
+    "latitude": -17.95,
+    "longitude": 122.24,
+    "state": "WA"
+  },
+  {
+    "id": "012038",
+    "name": "Kalgoorlie",
+    "latitude": -30.78,
+    "longitude": 121.45,
+    "state": "WA"
+  },
+  {
+    "id": "009965",
+    "name": "Bunbury",
+    "latitude": -33.36,
+    "longitude": 115.64,
+    "state": "WA"
+  },
+  {
+    "id": "014015",
+    "name": "Darwin",
+    "latitude": -12.42,
+    "longitude": 130.89,
+    "state": "NT"
+  },
+  {
+    "id": "015590",
+    "name": "Alice Springs",
+    "latitude": -23.8,
+    "longitude": 133.89,
+    "state": "NT"
+  }
+]

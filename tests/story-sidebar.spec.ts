@@ -1,0 +1,64 @@
+import { expect, test } from '@playwright/test';
+import { initialDocument } from '../components/story/document';
+
+test('desktop cases filter, switch and preserve edited drafts across reload', async ({ page }) => {
+  await page.goto('story/');
+  const cases = page.getByRole('navigation', { name: 'Story examples' });
+  await expect(cases.getByRole('button')).toHaveCount(3);
+  await expect(cases.getByRole('button', { name: 'Regional sales', exact: true })).toHaveAttribute('aria-current', 'page');
+  await page.getByLabel('Story MDX', { exact: true }).click();
+  await page.keyboard.press('ControlOrMeta+Home');
+  await page.keyboard.press('ControlOrMeta+Shift+End');
+  await page.keyboard.insertText(initialDocument.story.replace('Which region sells the most?', 'My sales draft'));
+  await expect(page.getByRole('heading', { name: 'My sales draft' })).toBeVisible();
+  await cases.getByRole('button', { name: 'Energy demand', exact: true }).click();
+  await expect(page).toHaveURL(/example=energy$/);
+  await expect(page.getByRole('heading', { name: 'When does demand peak?' })).toBeVisible();
+  await expect(page.locator('[data-story-value="count"]')).toHaveText('6');
+  await page.getByLabel('Demand cutoff', { exact: true }).fill('90');
+  await expect(page.locator('[data-story-value="count"]')).toHaveText('2');
+  await page.getByRole('button', { name: 'Hours above the cutoff', exact: true }).click();
+  await expect(page.locator('#energy')).toHaveAttribute('data-position', '1');
+  await expect(page.locator('#energy .vd-bar')).toHaveCount(2);
+  await page.getByLabel('Find a story', { exact: true }).fill('archived');
+  await expect(cases.getByRole('button')).toHaveCount(1);
+  await cases.getByRole('button', { name: 'Weather story', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'What makes a day exceptional?' })).toBeVisible();
+  await page.getByLabel('Find a story', { exact: true }).fill('nothing matches');
+  await expect(cases).toContainText('No matching stories.');
+  await page.getByLabel('Find a story', { exact: true }).fill('');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('visdelta.story.example-drafts.v1'))).toContain('My sales draft');
+  await page.reload();
+  await page.getByRole('navigation', { name: 'Story examples' }).getByRole('button', { name: 'Regional sales', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'My sales draft' })).toBeVisible();
+  await page.getByRole('button', { name: 'Collapse Sidebar', exact: true }).click();
+  await expect(page.locator('.story-shell')).toHaveAttribute('data-collapsed', 'true');
+  await page.mouse.move(700, 100);
+  await page.locator('.story-toolbar').getByRole('button', { name: 'Collapse Sidebar', exact: true }).click();
+  await expect(page.locator('.story-shell')).toHaveAttribute('data-collapsed', 'false');
+  await expect.poll(() => page.locator('.story-chart').first().evaluate(node => {
+    const figure = node.querySelector('figure');
+    if (!figure) return false;
+    const chart = node.getBoundingClientRect(), rendered = figure.getBoundingClientRect();
+    return rendered.right <= chart.right + 2 && rendered.bottom <= chart.bottom + 2;
+  })).toBe(true);
+  await page.screenshot({ path: test.info().outputPath('story-sidebar-desktop.png'), animations: 'disabled' });
+  await expect(page.locator('.story-error')).toHaveCount(0);
+});
+
+test('narrow screens use the shared drawer and selecting a case closes it', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('story/');
+  await page.locator('.story-toolbar').getByRole('button', { name: 'Open Sidebar', exact: true }).click();
+  await page.getByRole('navigation', { name: 'Story examples' }).getByRole('button', { name: 'Energy demand', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'When does demand peak?' })).toBeAttached();
+  await expect(page.locator('#nd-sidebar-mobile')).toBeHidden();
+  await expect(page.locator('.story-toolbar').getByRole('button', { name: 'Open Sidebar', exact: true })).toBeVisible();
+  await page.locator('.story-toolbar').getByRole('button', { name: 'Open Sidebar', exact: true }).click();
+  await expect(page.getByRole('navigation', { name: 'Story examples' }).getByRole('button', { name: 'Energy demand', exact: true })).toHaveAttribute('aria-current', 'page');
+  await page.screenshot({ path: test.info().outputPath('story-sidebar-mobile.png'), animations: 'disabled' });
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#nd-sidebar-mobile')).toBeHidden();
+  await expect(page.locator('.story-toolbar').getByRole('button', { name: 'Open Sidebar', exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});

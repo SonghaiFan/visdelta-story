@@ -1,0 +1,76 @@
+---
+title: Variables and controls
+description: Connect sliders, prose and chart states declaratively.
+---
+
+## Declare a value and a control
+
+```mdx
+<Story>
+<Var name="threshold" value={70} />
+<Controls>
+<Range bind="threshold" label="Demand cutoff" min={0} max={100} />
+</Controls>
+
+The cutoff is **<Value name="threshold" />**.
+
+</Story>
+```
+
+`Story` creates an isolated scope. `Var` declares a default. `Range`, `DatePicker` and `Select` write the bound variable; `Value` reads it. Reader choices survive prose edits while defaults remain unchanged. Unknown and duplicate declarations report author errors.
+
+## Return named charts and derived prose
+
+In `chart.js`, define a synchronous model. The example expects records with `hour` and `demand` fields, as in the Energy case:
+
+```js
+const model = ({ threshold }) => {
+  const overview = line(rows).key('hour').x('hour').y('demand');
+  const selected = bar(rows).key('hour')
+    .where({ demand: { gte: threshold } })
+    .x('hour').y('demand');
+  return {
+    views: { overview, selected },
+    values: { count: selected.rows().length },
+    conditions: { empty: selected.rows().length === 0 },
+  };
+};
+```
+
+Bind only the variables the model needs:
+
+```mdx
+import { model } from './chart.js'
+
+<Story>
+<Var name="threshold" value={70} />
+<StoryData model={model} bind={['threshold']}>
+<Controls>
+<Range bind="threshold" label="Demand cutoff" min={0} max={100} />
+</Controls>
+
+**<Value name="count" /> hours** meet the cutoff.
+
+<Scrolly>
+<Step view="overview">Read the daily shape.</Step>
+<Step view="selected">Compare the qualifying hours.</Step>
+</Scrolly>
+<Show when="empty">No hours meet this cutoff.</Show>
+</StoryData>
+</Story>
+```
+
+`views` contains native charts (or `{ chart, via }`); `values` contains scalar derived values; `conditions` contains booleans. `Step view`, `Value` and `Show` consume the nearest model. Give Step either `view` or `chart`.
+
+## Dates and choices
+
+```mdx
+<Story initial={{ date: '2022-02-14', metric: 'tmax' }}>
+<Controls>
+<DatePicker bind="date" label="Date" required />
+<Select bind="metric" label="Measure" options={['tmax', 'tmin']} />
+</Controls>
+</Story>
+```
+
+Select also accepts `{ value, label }` options, with text or numeric values. Binding values are scalar, including `null`; models must remain synchronous. Async archive loading belongs in a reusable adapter, as demonstrated by WeatherNarrative.

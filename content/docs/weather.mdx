@@ -1,0 +1,36 @@
+---
+title: Weather case study
+description: Explore a historical Melbourne archive without hiding its limitations.
+---
+
+## What makes a day exceptional?
+
+[Open the weather story](/story/?example=weather). Its fixed opening describes 7 February 2009: 45.9°C, the largest daily maximum in this archive. The next day was 20.9°C. Controls change subsequent charts and prose while that opening remains about the historical date.
+
+## Seven views of the same observations
+
+1. **One year** places the selected day among observations in its year.
+2. **Same season** compares nearby calendar dates across years.
+3. **Choose the tail** selects observations using the supplied percentile ranks.
+4. **Keep their dates** preserves the selected population through a date-based view.
+5. **Read their temperatures** rearranges those observations by temperature.
+6. **One dot per day** keeps individual observations visible.
+7. **The distribution** aggregates them into a histogram.
+
+Date and measure selectors, the percentile slider, quoted counts and native VisDelta views share the same variables. Controls update only the active native chart; a slider does not rebuild every transition in the chapter.
+
+## Evidence and limits
+
+The local archive contains 82,033 Melbourne records: 41,016 daily maxima and 41,017 daily minima, spanning January 1910 to April 2022. There are no duplicate date/measure records. Both series are missing 8 July 2021; those gaps are not imputed.
+
+For the opening day, the seasonal window has 1,695 observations. A supplied rank cutoff of 95 selects 118; a cutoff of 100 selects 21. These ranks are not the observed percentage of this seasonal subset.
+
+Comparisons use a common 365-day calendar, wrap across New Year, and handle leap day explicitly. The source's preparation and percentile reference population have not been recovered. This is an archive reading, not a live weather service or an independently verified climate baseline. Locations without observations do not substitute Melbourne data.
+
+The repository includes `data/weather/README.md`, `docs/case-studies/weather-analysis.md`, the data file and a reproducible analysis:
+
+```sh
+npm run analyze:weather
+```
+
+Browser tests independently count the archive, conserve selected identities across all seven views, exercise missing observations and verify slider response.

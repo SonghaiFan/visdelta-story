@@ -1,0 +1,26 @@
+---
+title: Editor and project files
+description: Edit, import, save and recover a complete story.
+---
+
+## Three editor files
+
+| File | Purpose |
+| --- | --- |
+| `story.mdx` | Prose, JSX components, imports and native chart declarations. |
+| `chart.js` | A script declaring `const chart` or `const model`. |
+| `data.json` | An array of records, editable as JSON or imported from CSV. |
+
+CSV uses D3 autoType; use JSON when identifiers must remain strings. Auto-run compiles after typing pauses. Manual Run uses ⌘/Ctrl+Enter. Errors retain a usable previous preview until corrected.
+
+## Save and open
+
+Save project downloads version-1 JSON containing `version`, `story`, `code` and `rows`. Open restores that file; it also accepts MDX. Imported files wait for Run before executing. MDX-only exports retain imports but do not bundle their companion files.
+
+The browser's import resolver supports `./chart.js`, `./data.json`, `./story-components.js`, `./weather.js`, React, D3, `visdelta`, its six built-in chart entry points and chart styles. It is not a general npm bundler or security sandbox. Only run trusted authoring files.
+
+## Drafts and migration
+
+Each sidebar case preserves its local authoring draft. Query parameters select a case; the old `weather-case` name opens the unified weather narrative. Reader control selections are transient.
+
+Browser storage is specific to the origin. If moving from the VisDelta website, download old drafts at its [Story entry](https://songhaifan.github.io/visdelta/story/), then Open the downloaded JSON in this editor. The old page preserves its browser storage. A saved project remains portable between addresses.

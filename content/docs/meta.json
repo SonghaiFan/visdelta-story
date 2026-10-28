@@ -1,0 +1,16 @@
+{
+  "title": "VisDelta Story",
+  "pages": [
+    "index",
+    "quick-start",
+    "---Authoring---",
+    "charts",
+    "bindings",
+    "styling",
+    "projects",
+    "---Examples and publishing---",
+    "weather",
+    "deployment",
+    "reference"
+  ]
+}

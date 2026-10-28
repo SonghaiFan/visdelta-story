@@ -1,0 +1,56 @@
+---
+title: Charts and scrolling
+description: Use native VisDelta declarations directly in MDX or chart.js.
+---
+
+## Declare complete chart states
+
+```mdx
+import { bar } from 'visdelta/bar'
+import rows from './data.json'
+
+export const overview = bar(rows).x('region').y('revenue')
+
+<Scrolly>
+<Step chart={overview}>The whole picture.</Step>
+<Step chart={overview.highlight({ region: 'North' })}>Focus on North.</Step>
+<Step chart={overview}>Return to the overview.</Step>
+</Scrolly>
+```
+
+Each Step receives a complete immutable state. `highlight()` returns a new declaration; it does not modify the base chart. No parallel states array or scroll handler is needed.
+
+## Move chart code into chart.js
+
+The chart editor supplies `bar`, `line`, `area`, `point`, `unit`, `pie`, `d3` and the records as `rows`. Declare `const chart = ...`, then import it in MDX:
+
+```js title="chart.js"
+const chart = bar(rows).x('region').y('revenue');
+```
+
+```mdx title="story.mdx"
+import { chart } from './chart.js'
+
+<Scrolly>
+<Step chart={chart}>Compare the regions.</Step>
+</Scrolly>
+```
+
+`chart.js` is evaluated as an editor script with these bindings; it is not an arbitrary module bundler. For shared controls and named views, use a [StoryData model](./bindings.mdx).
+
+## Playback and layout
+
+| Scrolly prop | Behavior |
+| --- | --- |
+| `playback="step"` | Default. Entering a step plays a 650ms transition to its state. |
+| `playback="scrub"` | Scroll continuously controls transition progress. |
+| `hold={0.45}` | Fraction of a scrub interval held at its starting state. |
+| `offset={0.55}` | Step activation line as a fraction of reader height. |
+| `layout` | `left`, `right` or `overlay`; narrow panes stack the content. |
+| `navigation`, `progress` | Show step navigation and the progress indicator. |
+| `chartStyle` | `d3`, `paper`, `dark` or `editorial`. |
+| `theme` | `inherit`, `paper` or `dark`. |
+
+Use distinct Step IDs for navigation and shareable hashes. Multiple Scrolly blocks own independent playback. Reduced motion snaps to states. Controls update the active native chart, and scrolling prepares transition legs on demand.
+
+For chart mappings, transforms and differences, use the [VisDelta library reference](https://songhaifan.github.io/visdelta/docs/api/).

@@ -1,0 +1,55 @@
+---
+title: Quick start
+description: Build a complete three-step story without hooks or scroll handlers.
+---
+
+## Run locally
+
+```sh
+npm ci
+npm run dev
+```
+
+Open `http://127.0.0.1:4322/story/`. The installed VisDelta package is included as a pinned public distribution snapshot; no sibling checkout is required.
+
+## Paste this into story.mdx
+
+```mdx
+import { bar } from 'visdelta/bar'
+
+export const chart = bar([
+  { region: 'North', revenue: 18 },
+  { region: 'South', revenue: 12 },
+  { region: 'West', revenue: 9 },
+]).x('region').y('revenue')
+
+# Which region sells the most?
+
+<Scrolly>
+<Step chart={chart} title="Overview">
+
+## Compare all three regions
+
+Every bar shows one region's revenue.
+
+</Step>
+<Step chart={chart.highlight({ region: 'North' })} title="North">
+
+## Look at North
+
+The other regions remain visible for comparison.
+
+</Step>
+<Step chart={chart} title="Compare again">
+
+## Return to the whole picture
+
+</Step>
+</Scrolly>
+```
+
+## Read and save
+
+Leave **Auto-run** on, or press **Run** (⌘/Ctrl+Enter). Entering each step starts its transition; stopping the scroll lets the animation finish. Reverse scrolling returns toward the previous state.
+
+**Read story** expands the preview. **Save project** (⌘/Ctrl+S) downloads MDX, chart code and data together. **Export MDX** downloads only the source. [Project files](./projects.mdx) explains their portability.
