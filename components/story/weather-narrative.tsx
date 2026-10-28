@@ -9,6 +9,8 @@ import { prepareWeather, seasonalDay, type WeatherSettings } from './weather-dat
 import { makeWeatherNarrativeCharts } from './weather-narrative-charts';
 import { initialSettings } from './weather-story';
 
+const datasetNames = { year: 'weatherYear', season: 'weatherSeason', selected: 'weatherSelected' };
+
 export function WeatherNarrative({ chart, children }: { chart?: ReturnType<typeof line>; children?: ReactNode }) {
   const bound = useStoryVariables(['station', 'date', 'metric', 'threshold']);
   if (!bound) return null;
@@ -18,9 +20,10 @@ function NarrativeSession({ settings, chart, children }: { settings: WeatherSett
   const archive = useWeatherArchive();
   const { station, date, metric, threshold } = settings;
   const data = useMemo(() => archive.records && station === 'Melbourne' ? prepareWeather(archive.records, { station, date, metric, threshold: 0 }, true) : null, [archive.records, station, date, metric]);
-  const base = useMemo(() => data ? makeWeatherNarrativeCharts(data, chart) : null, [data, chart]);
+  const base = useMemo(() => data ? makeWeatherNarrativeCharts(data, chart, datasetNames) : null, [data, chart]);
   const views = useMemo(() => base?.select(threshold), [base, threshold]);
-  const selected = useMemo(() => views?.extreme.rows() ?? [], [views]);
+  const selected = useMemo(() => views?.extreme.rows(data?.nearby) ?? [], [views, data]);
+  const bindings = useMemo(() => data ? { [datasetNames.year]: data.selectedYear, [datasetNames.season]: data.nearby, [datasetNames.selected]: selected } : undefined, [data, selected]);
   const center = seasonalDay(date) ?? seasonalDay('2001-02-28')!;
   const label = (offset: number) => new Date(Date.UTC(2001, 0, ((center - 1 + offset + 365) % 365) + 1)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const atLeast = data?.observation ? data.nearby.filter(row => row.temperature >= data.observation!.temperature).length : null;
@@ -43,6 +46,6 @@ function NarrativeSession({ settings, chart, children }: { settings: WeatherSett
   return <>
     {archive.error && <p role="alert">{archive.error} <button onClick={archive.retry}>Retry weather archive</button></p>}
     {!archive.records && !archive.error && <p role="status">Loading archived observations…</p>}
-    <StoryData views={views} values={values} conditions={conditions}>{children}</StoryData>
+    <StoryData data={bindings} views={views} values={values} conditions={conditions}>{children}</StoryData>
   </>;
 }

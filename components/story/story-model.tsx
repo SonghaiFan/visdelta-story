@@ -7,6 +7,8 @@ import { useStoryVariables } from './bindings';
 
 export interface StoryView { chart: Visualization; via?: Visualization[]; }
 export interface StoryModel {
+  /** Native VisDelta named dataset bindings, shared without inlining every view. */
+  data?: Record<string, unknown>;
   views?: Readonly<Record<string, Visualization | StoryView>>;
   values?: StoryValues;
   conditions?: Readonly<Record<string, boolean>>;
@@ -33,13 +35,13 @@ function validate(model: StoryModel) {
 }
 
 /** React adapters supply data; ordinary stories can use a pure chart.js model. */
-export function StoryData({ model, bind = noBindings, views, values, conditions, children }: StoryModel & {
+export function StoryData({ model, bind = noBindings, views, values, conditions, data, children }: StoryModel & {
   model?: (variables: StoryValues) => StoryModel;
   bind?: readonly string[];
   children?: ReactNode;
 }) {
   const variables = useStoryVariables(bind);
-  const result = useMemo(() => variables === null ? null : model ? model(variables) : { views, values, conditions }, [model, variables, views, values, conditions]);
+  const result = useMemo(() => variables === null ? null : model ? model(variables) : { views, values, conditions, data }, [model, variables, views, values, conditions, data]);
   if (variables === null) return null;
   validate(result as StoryModel);
   return <StoryModelContext.Provider value={result}>{children}</StoryModelContext.Provider>;

@@ -74,3 +74,25 @@ import { model } from './chart.js'
 ```
 
 Select also accepts `{ value, label }` options, with text or numeric values. Binding values are scalar, including `null`; models must remain synchronous. Async archive loading belongs in a reusable adapter, as demonstrated by WeatherNarrative.
+
+## Share large datasets through native bindings
+
+A model can return `data` alongside its views. VisDelta resolves the names through
+its public rendering and transition options, so each chart declaration need not
+contain its own copy of the records:
+
+```js
+const chart = bar({ name: 'sales' }).x('region').y('revenue');
+const model = ({ cutoff }) => ({
+  data: { sales: rows.filter(row => row.revenue >= cutoff) },
+  views: { overview: chart },
+});
+```
+
+Bind `cutoff` in StoryData as above. Data changes refresh the native chart even
+when the chart declaration itself is unchanged. For derived counts, use the
+bound records, or `chart.rows(records)` to apply the native chart's transforms.
+Weather uses shared year and season bindings, then materializes its native
+selection once with `chart.rows(source)` and shares that selected population
+with subsequent views. Large archive rows are not cloned into every intermediate
+chart declaration.

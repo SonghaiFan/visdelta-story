@@ -383,7 +383,8 @@ controls for saved documents.
 
 `StoryData` separates the data story's logic from its MDX prose. A synchronous
 `model` function receives the explicitly bound variables and returns named
-`views`, derived `values`, and boolean `conditions`. Put it in `chart.js`, where
+`views`, derived `values`, boolean `conditions`, and optional native named dataset
+bindings in `data`. Put it in `chart.js`, where
 all six native VisDelta factories, `rows` and `d3` are available:
 
 ```js

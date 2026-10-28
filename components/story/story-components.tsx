@@ -74,6 +74,7 @@ function createChartMount() {
 }
 
 export function Scrolly({ id, title = 'Scrolling story', layout = 'left', hold = 0.45, playback = 'step', offset = 0.55, navigation = true, lazy = false, progress = true, chartStyle = 'd3', theme = 'inherit', children, className, style }: ScrollyProps) {
+  const data = useContext(StoryModelContext)?.data;
   const reader = useContext(StoryReaderContext);
   const section = useRef<HTMLElement>(null);
   const host = useRef<HTMLDivElement>(null);
@@ -262,10 +263,10 @@ export function Scrolly({ id, title = 'Scrolling story', layout = 'left', hold =
         if (new Set(ids).size !== ids.length) throw new Error('Step IDs must be unique within a Scrolly.');
         const { createStoryPlayback } = await import('./playback');
         if (disposed) return;
-        const options = { target: mount, width: 'auto' as const, height: 'auto' as const, chartStyle: chartStylePresets[chartStyle] };
+        const options = { target: mount, width: 'auto' as const, height: 'auto' as const, chartStyle: chartStylePresets[chartStyle], data };
         const initialIndex = stepAt(root.scrollTop, anchors());
         const controller = reuse?.controller ?? await createStoryPlayback(states, options);
-        if (reuse) await controller.update(states, authoredPosition(initialIndex));
+        if (reuse) await controller.update(states, authoredPosition(initialIndex), data);
         if (disposed) { if (!reuse) { controller.destroy(); mount.remove(); } return; }
         if (!reuse) { current.current?.controller.destroy(); current.current?.mount.remove(); }
         current.current = { controller, mount, config };
@@ -295,7 +296,7 @@ export function Scrolly({ id, title = 'Scrolling story', layout = 'left', hold =
       media.removeEventListener('change', schedule);
       if (current.current?.mount !== mount) mount.remove();
     };
-  }, [ordered, reader, hold, offset, chartStyle, theme, layout, lazy, nearby, playback]);
+  }, [ordered, reader, hold, offset, chartStyle, theme, layout, lazy, nearby, playback, data]);
 
   if (!['step', 'scrub'].includes(playback)) throw new Error('Scrolly playback must be step or scrub.');
   if (!['left', 'right', 'overlay'].includes(layout)) throw new Error('Scrolly layout must be left, right or overlay.');

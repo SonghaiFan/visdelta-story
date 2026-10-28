@@ -4,7 +4,7 @@ type Options = NonNullable<Parameters<typeof transition>[2]> & { target: HTMLEle
 export interface StoryPlayback {
   progress(value: number): void;
   playTo(value: number, duration: number, onFrame: (value: number, complete: boolean) => void): void;
-  update(states: Visualization[], position: number): Promise<void>;
+  update(states: Visualization[], position: number, data?: Record<string, unknown>): Promise<void>;
   pause(): void;
   resize(): void;
   destroy(): void;
@@ -18,12 +18,13 @@ const family = (state: Visualization) => {
  * rendering; they do not compile every future transition in the chapter. */
 export async function createStoryPlayback(initial: Visualization[], options: Options): Promise<StoryPlayback> {
   let states = initial;
+  let datasets = options.data;
   let position = 0;
   let generation = 0;
   let request = 0;
   let destroyed = false;
   let animation: number | null = null;
-  type Endpoint = { host: HTMLDivElement; view: ChartView; state: Visualization };
+  type Endpoint = { host: HTMLDivElement; view: ChartView; state: Visualization; data?: Options['data'] };
   type Leg = { host: HTMLDivElement; controller?: Awaited<ReturnType<typeof transition>>; from?: Endpoint; to?: Endpoint; local?: number; dirty?: boolean };
   const legs = new Map<number, Promise<Leg>>();
   const mountedLegs = new Set<Leg>();
@@ -49,14 +50,15 @@ export async function createStoryPlayback(initial: Visualization[], options: Opt
   const pause = () => { request++; if (animation !== null) cancelAnimationFrame(animation); animation = null; };
   async function makeEndpoint(state: Visualization, parent = options.target): Promise<Endpoint> {
     const node = host(); parent.append(node);
-    const view = await render(node, state, { ...options, ...(parent === options.target ? {} : dimensions()), updates: { policy: 'latest' } });
-    return { host: node, view, state };
+    const data = datasets;
+    const view = await render(node, state, { ...options, data, ...(parent === options.target ? {} : dimensions()), updates: { policy: 'latest' } });
+    return { host: node, view, state, data };
   }
   async function showEndpoint(index: number, ticket: number) {
     const state = states[index];
     if (!state || destroyed) return;
     let next = endpoint;
-    if (!next || next.state !== state || !next.host.isConnected) {
+    if (!next || next.state !== state || next.data !== datasets || !next.host.isConnected) {
       // A data control requests an immediate frame, not a route from the old
       // declaration. Render only the destination through VisDelta's renderer.
       next = await makeEndpoint(state);
@@ -76,7 +78,7 @@ export async function createStoryPlayback(initial: Visualization[], options: Opt
       const node = host();
       const leg: Leg = { host: node };
       try {
-        if (family(from) === family(to)) leg.controller = await transition(from, to, { ...options, ...dimensions(), target: node });
+        if (family(from) === family(to)) leg.controller = await transition(from, to, { ...options, data: datasets, ...dimensions(), target: node });
         else {
           leg.from = await makeEndpoint(from, node);
           leg.to = await makeEndpoint(to, node);
@@ -148,8 +150,9 @@ export async function createStoryPlayback(initial: Visualization[], options: Opt
         animation = requestAnimationFrame(tick);
       })().catch(report);
     },
-    async update(next, value) {
+    async update(next, value, data) {
       pause(); generation++;
+      datasets = data;
       const previous = [...mountedLegs];
       legs.clear();
       states = next;

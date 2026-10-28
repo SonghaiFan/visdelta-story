@@ -194,3 +194,40 @@ Result: <Value name="result" />
   await expect(page.locator('[data-story-value="result"]')).toHaveText('—');
   await expect(page.locator('.story-error')).toHaveCount(0);
 });
+
+test('named datasets update unchanged native chart declarations and their transitions', async ({ page }) => {
+  await page.goto('story/');
+  await edit(page, `import { bar } from 'visdelta/bar'
+import rows from './data.json'
+
+export const chart = bar({ name: 'sales' }).x('region').y('revenue')
+export const focused = chart.highlight({ region: 'North' })
+export const model = ({ cutoff }) => {
+  const selected = rows.filter(row => row.revenue >= cutoff)
+  return { data: { sales: selected }, views: { all: chart, focused }, values: { count: selected.length } }
+}
+
+<Story>
+<Var name="cutoff" value={0} />
+<StoryData model={model} bind={['cutoff']}>
+<Select bind="cutoff" label="Minimum revenue" options={[{value: 0, label: 'All'}, {value: 15, label: '15 or more'}]} />
+<Value name="count" />
+<Scrolly>
+<Step view="all" title="All sales">All sales.</Step>
+<Step view="focused" title="Focus North">North remains highlighted.</Step>
+</Scrolly>
+</StoryData>
+</Story>`);
+  const chapter = page.locator('.story-scrolly');
+  await expect(chapter).toHaveAttribute('data-ready', 'true');
+  await expect(chapter.locator('rect.vd-bar')).toHaveCount(3);
+  await page.getByLabel('Minimum revenue').selectOption('15');
+  await expect(page.locator('[data-story-value="count"]')).toHaveText('1');
+  await expect(chapter.locator('rect.vd-bar')).toHaveCount(1);
+  await chapter.getByRole('button', { name: 'Focus North', exact: true }).click();
+  await expect(chapter).toHaveAttribute('data-position', '1');
+  await page.getByLabel('Minimum revenue').selectOption('0');
+  await expect(chapter).toHaveAttribute('data-ready', 'true');
+  await expect(chapter.locator('rect.vd-bar')).toHaveCount(3);
+  await expect(page.locator('.story-error')).toHaveCount(0);
+});
